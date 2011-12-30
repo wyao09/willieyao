@@ -1,0 +1,10 @@
+---
+layout: post
+title: Hello World (and Hello Jekyll)
+---
+
+h1. {{ page.title }}
+
+p(meta). 29 Dec 2011 - San Jose
+
+Welcome to my corner of the internet.
