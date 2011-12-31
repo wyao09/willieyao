@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Harvard Computer Science Classes</title>
+    <script type="text/javascript" src="d3.js"></script>
+    <script type="text/javascript" src="d3.geom.js"></script>
+    <script type="text/javascript" src="d3.layout.js"></script>
+    <style type="text/css">
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+circle.taken {
+  fill: green;
+}
+
+circle.future{
+  fill:yellow;
+}
+
+text {
+  font: 12px sans-serif;
+  pointer-events: none;
+}
+
+text.shadow {
+  stroke: #fff;
+  stroke-width: 3px;
+  stroke-opacity: .8;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript">
+
+// http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
+
+var taken = ["CS50","CS51","CS61","CS121","CS143","CS153:Compiler",
+             "CS179:Usability","CS175:Graphics"]
+
+var taken_short = ["CS50","CS51","CS61","CS121","CS143","CS153",
+             "CS179","CS175"]
+
+var future = ["CS124","CS161","CS186:Econ"]
+
+var links = [
+  {source: "CS50", target: "CS51", type: "solid"},
+  {source: "CS50", target: "CS61", type: "solid"},
+  {source: "CS51", target: "CS96:System Design", type: "solid"},
+  {source: "CS61", target: "CS96:System Design", type: "solid"},
+  {source: "CS105", target: "CS105", type: "self"},
+  {source: "CS91r", target: "CS91r", type: "self"},
+  {source: "CS20", target: "CS121", type: "solid"},
+  {source: "CS121", target: "CS124", type: "solid"},
+  {source: "CS61", target: "CS141:Hardware", type: "solid"},
+  {source: "CS51", target: "CS143", type: "solid"},
+  {source: "CS61", target: "CS143", type: "solid"},
+  {source: "CS143", target: "CS144r", type: "solid"},
+  {source: "CS141", target: "CS146:Architecture", type: "solid"},
+  {source: "CS141", target: "CS148:VLSI Circuits", type: "solid"},
+  {source: "CS51", target: "CS152:Languages", type: "solid"},
+  {source: "CS121", target: "CS152:Languages", type: "solid"},
+  {source: "CS61", target: "CS153:Compiler", type: "solid"},
+  {source: "CS51", target: "CS153:Compiler", type: "solid"},
+  {source: "CS61", target: "CS161", type: "solid"},
+  {source: "CS51", target: "CS161", type: "solid"},
+  {source: "CS50", target: "CS164:Mobile", type: "solid"},
+  {source: "CS51", target: "CS165:Info Management", type: "solid"},
+  {source: "CS50", target: "CS171:Visualization", type: "solid"},
+  {source: "CS51", target: "CS175:Graphics", type: "solid"},
+  {source: "CS50", target: "CS179:Usability", type: "solid"},
+  {source: "CS42:Cyberspace", target: "CS42:Cyberspace", type: "self"},
+  {source: "CS51", target: "CS181:AI", type: "solid"},
+  {source: "CS121", target: "CS181:AI", type: "solid"},
+  {source: "CS51", target: "CS182:AI", type: "solid"},
+  {source: "CS121", target: "CS182:AI", type: "solid"},
+  {source: "CS51", target: "CS186:Econ", type: "solid"},
+  {source: "CS181:AI", target: "CS186:Econ", type: "solid"},
+  {source: "CS182:AI", target: "CS186:Econ", type: "solid"},
+  {source: "CS121", target: "CS187:Linguistics", type: "solid"},
+  {source: "CS181:AI", target: "CS189r:Robots", type: "solid"},
+  {source: "CS182:AI", target: "CS189r:Robots", type: "solid"}
+];
+
+var links_short = [
+  {source: "CS50", target: "CS51", type: "solid"},
+  {source: "CS50", target: "CS61", type: "solid"},
+  {source: "CS51", target: "CS96", type: "solid"},
+  {source: "CS61", target: "CS96", type: "solid"},
+  {source: "CS105", target: "CS105", type: "self"},
+  {source: "CS91r", target: "CS91r", type: "self"},
+  {source: "CS20", target: "CS121", type: "solid"},
+  {source: "CS121", target: "CS124", type: "solid"},
+  {source: "CS61", target: "CS141", type: "solid"},
+  {source: "CS51", target: "CS143", type: "solid"},
+  {source: "CS61", target: "CS143", type: "solid"},
+  {source: "CS143", target: "CS144r", type: "solid"},
+  {source: "CS141", target: "CS146", type: "solid"},
+  {source: "CS141", target: "CS148", type: "solid"},
+  {source: "CS51", target: "CS152", type: "solid"},
+  {source: "CS121", target: "CS152", type: "solid"},
+  {source: "CS61", target: "CS153", type: "solid"},
+  {source: "CS51", target: "CS153", type: "solid"},
+  {source: "CS61", target: "CS161", type: "solid"},
+  {source: "CS51", target: "CS161", type: "solid"},
+  {source: "CS50", target: "CS164", type: "solid"},
+  {source: "CS51", target: "CS165", type: "solid"},
+  {source: "CS50", target: "CS171", type: "solid"},
+  {source: "CS51", target: "CS175", type: "solid"},
+  {source: "CS50", target: "CS179", type: "solid"},
+  {source: "CS42", target: "CS42", type: "self"},
+  {source: "CS51", target: "CS181", type: "solid"},
+  {source: "CS121", target: "CS181", type: "solid"},
+  {source: "CS51", target: "CS182", type: "solid"},
+  {source: "CS121", target: "CS182", type: "solid"},
+  {source: "CS51", target: "CS186", type: "solid"},
+  {source: "CS181", target: "CS186", type: "solid"},
+  {source: "CS182", target: "CS186", type: "solid"},
+  {source: "CS121", target: "CS187", type: "solid"},
+  {source: "CS181", target: "CS189r", type: "solid"},
+  {source: "CS182", target: "CS189r", type: "solid"}
+];
+
+var nodes = {};
+
+// Compute the distinct nodes from the links.
+links.forEach(function(link) {
+  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+});
+
+var w = 960,
+    h = 600;
+
+var force = d3.layout.force()
+    .nodes(d3.values(nodes))
+    .links(links)
+    .size([w, h])
+    .linkDistance(90)
+    .charge(-300)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", w)
+    .attr("height", h);
+
+// Per-type markers, as they don't inherit styles.
+svg.append("defs").selectAll("marker")
+    .data(["solid"])
+  .enter().append("marker")
+    .attr("id", String)
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M0,-5L10,0L0,5");
+
+var path = svg.append("g").selectAll("path")
+    .data(force.links())
+  .enter().append("path")
+    .attr("class", function(d) { return "link " + d.type; })
+    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+var circle = svg.append("g").selectAll("circle")
+    .data(force.nodes())
+  .enter().append("circle")
+    .attr("r", 8)
+    .attr("class", function(d) {if(taken.indexOf(d.name) > -1) 
+                                   return "taken";
+                                else if(future.indexOf(d.name) > -1)
+                                   return "future";
+                                else return "not-taken";})
+    .call(force.drag);
+
+var text = svg.append("g").selectAll("g")
+    .data(force.nodes())
+  .enter().append("g");
+
+// A copy of the text with a thick white stroke for legibility.
+text.append("text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .attr("class", "shadow")
+    .text(function(d) { return d.name; });
+
+text.append("text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .text(function(d) { return d.name; });
+
+// Use elliptical arc path segments to doubly-encode directionality.
+function tick() {
+  path.attr("d", function(d) {
+    var dx = d.target.x - d.source.x,
+        dy = d.target.y - d.source.y,
+        dr = Math.sqrt(dx * dx + dy * dy);
+    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+  });
+
+  circle.attr("transform", function(d) {
+    return "translate(" + d.x + "," + d.y + ")";
+  });
+
+  text.attr("transform", function(d) {
+    return "translate(" + d.x + "," + d.y + ")";
+  });
+}
+
+    </script>
+  </body>
+</html>

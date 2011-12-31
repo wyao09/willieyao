@@ -1,0 +1,11 @@
+---
+layout: post
+title: Hello World (and Hello Jekyll)
+tag: blog
+---
+
+h1. {{ page.title }}
+
+p(meta). 29 Dec 2011 - San Jose
+
+Welcome to my personal site. It's being maintained mostly for self-amusement. I wanted to force myself to organize the things that I work on--I think it's motivating to know that my stuff might be out in the open later. I also wanted to force myself to learn more things and work on more projects, both the boring (eg purchasing this domain/service) and interesting (eg "Jekyll":http://jekyllrb.com). Hopefully you will find something interesting here.

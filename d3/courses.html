@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Harvard Courses</title>
+    <script type="text/javascript" src="d3.js"></script>
+    <script type="text/javascript" src="d3.geom.js"></script>
+    <script type="text/javascript" src="d3.layout.js"></script>
+    <style type="text/css">
+
+button{
+
+}
+#panel{
+
+}
+
+.taken{
+color:green;
+}
+.future{
+color:yellow;
+}
+
+path.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+circle.taken {
+  fill: green;
+}
+
+circle.future{
+  fill:yellow;
+}
+
+text {
+  font: 12px sans-serif;
+  pointer-events: none;
+}
+
+text.shadow {
+  stroke: #fff;
+  stroke-width: 3px;
+  stroke-opacity: .8;
+}
+
+    </style>
+  </head>
+  <body>
+  <div id="panel"></div>
+  <p class = "taken">Classes I've taken.</p>
+  <p class = "future">Classes I plan on taking.</p>
+  <p>Note: I didn't parse the prereqs thoroughly (it was too irregular).
+     All prepreqs are (falsely) assumed to be in the same field. For example,
+     Stat 110 is a recommended class for CS 124, but it will be drawn as
+     CS 110 above.</p>
+  <script type="text/javascript">
+
+// http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
+
+var taken = ["COMPSCI50","COMPSCI51","COMPSCI61","COMPSCI121",
+             "COMPSCI143","COMPSCI153", "MATH21b", "EXPOS20",
+             "COMPSCI179","COMPSCI175", "GOV20", "MATH21a",
+             "ECON10","PHYSICS15a","JAPANBa","JAPANBb","APMTH107",
+             "ECON1640","STAT110"]
+
+var future = ["COMPSCI124","COMPSCI161","COMPSCI186","OEB52","APMTH121",
+             "AESTH&INTP53","ETH-REASON18"]
+
+var links = []
+
+fields = ["AESTH&INTP", "AFRAMER", "AKKAD", "AM-CIV", "ANE", "ANTHRO", "APMTH", "APPHY", "ARABIC", "ARAMAIC", "ARMEN", "ARMENST", "ASTRON", "BBS", "BCMP", "BIOPHYS", "BIOSTAT", "BPH", "BSDM", "CATALAN", "CELLBIO", "CELTIC", "CHEM", "CHEMBIO", "CHNSE", "CHNSHIS", "CHNSLIT", "CLAS-HEB", "CLAS-STDY", "CLASARCH", "CLASPHIL", "CLASSIC", "COMPLIT", "COMPSCI", "CPB", "CULTR&BLF", "DESIGN", "DRAMA", "DRB", "E&M-REASON", "E-PSCI", "EABS", "EASTD", "ECON", "EGYPTIAN", "ENG-SCI", "ENGLISH", "ESPP", "ETH-REASON", "EXPOS", "FOLKMYTH", "FOR-CULT", "FRENCH", "FRSEMR", "GENETIC", "GERM-STD", "GERMAN", "GERMPHIL", "GHHP", "GIKUYU", "GOV", "GREEK", "HAA", "HBTM", "HEB", "HEBREW", "HINDI", "HIS-STD", "HIST", "HIST-LIT", "HISTSCI", "HLTHPOL", "HSEMR-LE", "HSEMR-MA", "HSEMR-PF", "HSEMR-WI", "IMUNOL", "INDN-ST", "IRANCIV", "IRANIAN", "ISLAMCIV", "ITAL", "JAPAN", "JAPNHIST", "JAPNLIT", "JEWISHST", "KOREAN", "KORHIST", "KORLIT", "LAT-STD", "LATIN", "LIFESCI", "LING", "LIT-ART", "LITER", "LPS", "MANCHU", "MATH", "MBB", "MCB", "MED-SCI", "MEDGREEK", "MEDLATIN", "MEDVLSTD", "MES", "MICROBI", "MOD-HEB", "MODGRK", "MONGOLN", "MUSIC", "NEC", "NEPALI", "NEUROBIO", "OEB", "PALI", "PATHOL", "PERSIAN", "PHIL", "PHYSCI", "PHYSICS", "PORTUG", "PSY", "RELIGION", "ROM-STD", "RSEA", "RSRA", "SANSKRT", "SCAND", "SCI-LIVSYS", "SCI-PHYUNV", "SCRB", "SEMPHIL", "SLAVIC", "SOC-ANAL", "SOC-STD", "SOC-WORLD", "SOCIOL", "SPANSH", "SPC-CONC", "SPOL", "STAT", "SUMERIAN", "SWAHILI", "SWEDISH", "SYSTBIO", "TAMIL", "THAI", "TIBETAN", "TIBHIST", "TURKISH", "TWI", "UKRAN", "URDU", "US-WORLD", "UYGHUR", "VES", "VIETNAM", "VIROLOGY", "WOMGEN", "YIDDISH", "YORUBA"]
+
+lookup = {'COMPSCI':'Computer Science','MATH':'Mathematics','APMTH':'Applied Mathematics','STAT':'Statistics'} //eh I give up
+
+for (f in fields){
+  var button = document.createElement("button")
+  button.setAttribute("onclick", "update('"+fields[f]+"')")
+  var text = document.createTextNode(fields[f])
+  button.appendChild(text)
+  document.getElementById("panel").appendChild(button)
+}
+
+function update(subject){
+  //perform variable resets
+  var element = document.getElementById("svg")
+  if (element)
+    element.parentNode.removeChild(element)
+  if (typeof sgv != 'undefined')
+    sgv = undefined
+  links = []
+  if (typeof nodes != 'undefined')
+    nodes = {}
+  if (typeof force != 'undefined')
+    force = undefined
+  if (typeof path != 'undefined')
+    path = undefined
+  if (typeof circle != 'undefined')
+    circle = undefined
+  if (typeof text != 'undefined')
+    text = undefined
+
+//begin updating
+d3.json("courses.json", function(data){
+   for (d in data){       
+     field = data[d].field
+     prereq = data[d].prerequisites
+     if (field == subject){
+       if (prereq == ""){
+         links.push({source: field+data[d].number,
+                 target: field+data[d].number, type: "self"})
+       }
+       else{
+         var num = prereq.match(/[0-9]+[a-z]*|B[a-b]/g)
+	 for (n in num){
+           links.push({source: subject+num[n],
+                 target: field+data[d].number, type: "solid"})
+         }
+       }
+     }
+   } 
+
+var nodes = {};
+
+// Compute the distinct nodes from the links.
+links.forEach(function(link) {
+  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+});
+
+// Maximize to viewport size
+if (typeof window.innerWidth != 'undefined' &&
+    typeof window.innerHeight != 'undefined'){
+  var w = window.innerWidth - 30,
+      h = window.innerHeight - 75;
+}
+else{
+  var v = 1200,
+      h = 600
+}
+var force = d3.layout.force()
+    .nodes(d3.values(nodes))
+    .links(links)
+    .size([w, h])
+    .linkDistance(90) //adjust
+    .charge(-200)  //adjust
+    .on("tick", tick)
+    .start();
+
+var panel = document.getElementById("panel")
+
+var svg = d3.select("body").insert("svg", "#panel")
+    .attr("width", w)
+    .attr("height", h)
+    .attr("id", "svg");
+
+// Per-type markers, as they don't inherit styles.
+svg.append("defs").selectAll("marker")
+    .data(["solid"])
+  .enter().append("marker")
+    .attr("id", String)
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M0,-5L10,0L0,5");
+
+var path = svg.append("g").selectAll("path")
+    .data(force.links())
+  .enter().append("path")
+    .attr("class", function(d) { return "link " + d.type; })
+    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+var circle = svg.append("g").selectAll("circle")
+    .data(force.nodes())
+  .enter().append("circle")
+    .attr("r", 8)
+    .attr("class", function(d) {if(taken.indexOf(d.name) > -1) 
+                                   return "taken";
+                                else if(future.indexOf(d.name) > -1)
+                                   return "future";
+                                else return "not-taken";})
+    .call(force.drag);
+
+var text = svg.append("g").selectAll("g")
+    .data(force.nodes())
+  .enter().append("g");
+
+// A copy of the text with a thick white stroke for legibility.
+text.append("text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .attr("class", "shadow")
+    .text(function(d) { return d.name; });
+
+text.append("text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .text(function(d) { return d.name; });
+
+// Use elliptical arc path segments to doubly-encode directionality.
+function tick() {
+  path.attr("d", function(d) {
+    var dx = d.target.x - d.source.x,
+        dy = d.target.y - d.source.y,
+        dr = Math.sqrt(dx * dx + dy * dy);
+    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+  });
+
+  circle.attr("transform", function(d) {
+    return "translate(" + d.x + "," + d.y + ")";
+  });
+
+  text.attr("transform", function(d) {
+    return "translate(" + d.x + "," + d.y + ")";
+  });
+}
+})
+}
+update("COMPSCI")
+    </script>
+  </body>
+</html>

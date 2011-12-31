@@ -43,7 +43,7 @@ a:hover {
 }
 
 a:visited {
-  color: #a0a;
+  color: #8085C1;
 }
 
 table {
@@ -87,18 +87,18 @@ ul.posts {
 }
 
 .title {
-  color: #a00;
+  color: #966;
   font-weight: bold;
   margin-bottom: 2em;
 }
 
   .site .title a {
-    color: #a00;
+    color: #966;
     text-decoration: none;
   }
 
   .site .title a:hover {
-    color: black;
+    color: #006;
   }
 
   .site .title a.extra {
@@ -186,3 +186,15 @@ ul.posts {
   #related h2 {
     margin-bottom: 1em;
   }
+
+
+/*****************************************************************************/
+/*
+/* Downloads
+/*
+/*****************************************************************************/
+
+.downloads ul {
+  margin-left: 3em;
+  list-style-type: none;
+}

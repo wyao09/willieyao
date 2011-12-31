@@ -1,0 +1,15 @@
+---
+layout: post
+title: CS121 Introduction to Formal Systems and Computation
+tag: school
+---
+
+h1. {{ page.title }}
+
+p(meta). 30 Dec 2011 - San Jose
+
+in progress...
+
+"Study guide":../../../files/CS121StudyGuide.doc
+
+"Course website":http://www.seas.harvard.edu/courses/cs121/

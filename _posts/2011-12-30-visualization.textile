@@ -1,0 +1,13 @@
+---
+layout: post
+title: Visualization
+tag: blog
+---
+
+h1. {{ page.title }}
+
+p(meta). 30 Dec 2011 - San Jose
+
+in progress...
+
+"Visualization of all courses at Harvard":../../../d3/courses.html.

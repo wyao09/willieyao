@@ -1,0 +1,13 @@
+---
+layout: post
+title: School
+tag: school
+---
+
+h1. {{ page.title }}
+
+p(meta). 29 Dec 2011 - San Jose
+
+I take 4 classes each term. Each course typically culminates some time during the week before finals, at which point I've had time to learn the term's worth of material in a few days. The endless studying aside, these moments--when an entire course comes together and topics from week 3 start to connect with those from week 7--are some of my favorites as far as school goes. I then take the final and proceed to forget the material.
+
+So this section is where I attempt to capture these moments and summarize the interesting things I learned in school.

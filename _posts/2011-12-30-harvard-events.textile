@@ -1,0 +1,13 @@
+---
+layout: post
+title: Harvard Events (Chrome Extension)
+tag: blog
+---
+
+h1. {{ page.title }}
+
+p(meta). 30 Dec 2011 - San Jose
+
+in progress...
+
+"Harvard Events Chrome extension":https://chrome.google.com/webstore/detail/biaeecgbnpopooiiedncjnknckipgfkb.
