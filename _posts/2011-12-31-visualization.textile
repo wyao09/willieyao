@@ -1,0 +1,24 @@
+---
+layout: post
+title: Visualization
+tag: blog
+---
+
+h1. {{ page.title }}
+
+p(meta). 1 Jan 2012 - San Jose
+
+I wanted to learn a visualization framework, and after reading "the 5 best visualization toolkits":http://filosophy.org/2011/07/23/the-5-best-visualization-toolkits.html, I decided on "d3":http://mbostock.github.com/d3/, a "small, free JavaScript library for manipulating documents based on data." I still have no idea what I'm doing, but I was able to make a "force-directed graph":http://mbostock.github.com/d3/ex/force.html of "all Harvard courses":../../../d3/courses.html pretty quickly using data from "HarvardCourses API":https://manual.cs50.net/HarvardCourses_API.
+
+The arrows represent the prerequisites for each course. I also marked the courses I have/will take for kicks. There were some distinct patterns:
+
+*Computer Science* has a lot of prerequites.
+!../../../img/compsci.png!:../../../d3/courses.html
+
+Harvard teaches a lot of *Economics* courses.
+!../../../img/econ.png!:../../../d3/courses.html
+
+Fields like *Government* don't really subscribe to prereqs.
+!../../../img/gov.png!:../../../d3/courses.html
+
+You can "try it here":../../../d3/courses.html.
