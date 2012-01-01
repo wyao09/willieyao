@@ -143,6 +143,11 @@ ul.posts {
 
 }
 
+#post img{
+  display: block;
+  margin: auto;
+}
+
   /* standard */
 
   #post pre {

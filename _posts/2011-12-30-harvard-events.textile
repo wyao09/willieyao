@@ -8,6 +8,16 @@ h1. {{ page.title }}
 
 p(meta). 30 Dec 2011 - San Jose
 
-in progress...
+Right before heading back to school (summer 2011), I made a Google Chrome Extension that lists daily events at Harvard. I had missed the visits of many prominent speakers (eg Bill Gates, Yo Yo Ma) the year before, so I made the extension to lower the barrier of checking for these events. I also got the idea from "Fil's extension":https://chrome.google.com/webstore/detail/kolkghlafoledmpdmpgjahlcehclkbpa, which lists the daily dining hall menu.
 
-"Harvard Events Chrome extension":https://chrome.google.com/webstore/detail/biaeecgbnpopooiiedncjnknckipgfkb.
+!../../../img/events_screen.jpg!
+
+Chrome Extensions "boiled down":http://code.google.com/chrome/extensions/overview.html#files to just javascript and a "one-time $5 developer fee":http://code.google.com/chrome/webstore/docs/publish.html#step8 for Webstore hosting. The events were requested through the "HarvardEvents API":https://manual.cs50.net/HarvardEvents_API, and I used the "jQuery UI Datepicker":http://jqueryui.com/demos/datepicker/ for the calender.
+
+I had intended on adding some search/filter functionality, but I didn't ended up not using the extension as much as I thought I would during the year, so it's doubtful I will ever get back to it. I did send it over 2 house mailing lists though, so it does look like my efforts were not completely wasted:
+
+!../../../img/events_overview.png!
+
+"Download":https://chrome.google.com/webstore/detail/biaeecgbnpopooiiedncjnknckipgfkb
+
+"Code":https://github.com/wyao09/events

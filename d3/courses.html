@@ -8,18 +8,19 @@
     <script type="text/javascript" src="d3.layout.js"></script>
     <style type="text/css">
 
-button{
-
+button.relevant{
+  background: #8085C1;
 }
+
 #panel{
 
 }
 
 .taken{
-color:green;
+  color:green;
 }
 .future{
-color:yellow;
+  color:yellow;
 }
 
 path.link {
@@ -71,7 +72,10 @@ var taken = ["COMPSCI50","COMPSCI51","COMPSCI61","COMPSCI121",
              "COMPSCI143","COMPSCI153", "MATH21b", "EXPOS20",
              "COMPSCI179","COMPSCI175", "GOV20", "MATH21a",
              "ECON10","PHYSICS15a","JAPANBa","JAPANBb","APMTH107",
-             "ECON1640","STAT110"]
+             "ECON1640","STAT110","ECON1745"]
+
+var taken_fields = ["COMPSCI","MATH","EXPOS","GOV","PHYSICS","JAPAN",
+                    "APMTH","STAT","ECON","OEB","AESTH&INTP","ETH-REASON"]
 
 var future = ["COMPSCI124","COMPSCI161","COMPSCI186","OEB52","APMTH121",
              "AESTH&INTP53","ETH-REASON18"]
@@ -87,6 +91,8 @@ for (f in fields){
   button.setAttribute("onclick", "update('"+fields[f]+"')")
   var text = document.createTextNode(fields[f])
   button.appendChild(text)
+  if (taken_fields.indexOf(fields[f]) > -1)
+    button.setAttribute("class","relevant")
   document.getElementById("panel").appendChild(button)
 }
 

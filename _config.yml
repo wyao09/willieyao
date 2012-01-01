@@ -1,2 +1,5 @@
 markdown: rdiscount
 pygments: true
+auto: true
+ftp_host: 199.188.204.95
+ftp_dir: /home/dabewr/public_html/test
