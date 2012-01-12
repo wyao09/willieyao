@@ -1,0 +1,58 @@
+---
+layout: post
+title: Scheduler
+tag: blog
+---
+
+h1. {{ page.title }}
+
+p(meta). 12 Jan 2012 - San Jose
+
+Partially for "HCAP":../../../2012/01/11/hcap-website.html, but mostly out of my own interest, I wrote a python script that optimizes event assignments based on user preferences.
+
+!../../../img/repetitive-tasks.png!
+
+Initially I played around with "python-constraint":http://labix.org/python-constraint, which (as far as I can tell) is good for solving under strict constraints, but less so for finding the "best" solution. I tried to simply find the best assignment among all the possible ones. Bad idea. With an input size of N = 20 (HCAP had 60+ members), I was out of RAM. Amazon's AWS at least had the courtesy to kick me off.
+
+I decided I didn't really need the best possible assignment, just one that's good enough. So instead of looking into "research":http://arxiv.org/pdf/0801.3971, I decided to just randomize like crazy.
+
+The script randomly picks an individual and assign it the best possible available event based on that individual's preferences. After everyone has been assigned an event, the process repeats until all the events are exhausted. It then repeat this entire process as many times as @[# iterations]@, keeping the best set of assignments using the following scoring given @[# preferences]@ = 3:
+
+1 pt for event assignments not on the individual's preferences
+3 pt for assigning 3rd preference
+5 pt for assigning 2nd preference
+7 pt for assigning 1st preference
+
+Different scoring can be swapped in by editing the @score(assignments, preference)@ function
+
+The script does *not* prevent assignments of overlapping events to the same individual.
+
+*Usage*
+@python scheduler.py [survey.csv] [events.csv] [# preferences] [# iterations]@
+
+Sample @[survey.csv]@ file:
+
+bc. Name,First Choice,Second Choice,Third Choice,...
+Apple,Event1,Event2,Event3,...
+Orange,Event4,Event2,Event1,...
+Banana,Event2,Event3,Event4,...
+...
+
+The first line is necessary but ignored.
+
+Sample @[events.csv]@ file:
+
+bc. Event1,3
+Event2,3
+Event3,2
+Event4,5
+...
+
+The number indicates the number of available slots for that event.
+
+Any number of @[# preferences]@ are okay, including 0. @[# iteration]@ indicates the number of times the randomized assignments occur. Results tend to converge around 1000 iterations.
+
+Results are printed out in the terminal, which I just pipe to an output file.
+
+"code":https://github.com/wyao09/scheduler (file_io.py and scheduler.py)
+"more sample csv files":https://github.com/wyao09/scheduler/tree/master/csv

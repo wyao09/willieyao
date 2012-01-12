@@ -1,0 +1,13 @@
+---
+layout: post
+title: HCAP Website
+tag: blog
+---
+
+h1. {{ page.title }}
+
+p(meta). 11 Jan 2012 - San Jose
+
+The Harvard College in Asia Program is a program that gives students like me the excuse to go to Asian countries over spring break. In exchange for the all ground expenses paid experience, I made their "website":http://www.harvardcollegeinasia.org prettier, borrowing the banner idea from "Yuhki":http://yuhki.me/portfolio/. In effect this meant wrestling with Wordpress to give the right javascript and css priority. It wasn't anything interesting, but I did end up liking the theme:
+
+!../../../img/hcap.png!:http://www.harvardcollegeinasia.org
