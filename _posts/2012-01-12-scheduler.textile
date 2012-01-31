@@ -52,7 +52,44 @@ The number indicates the number of available slots for that event.
 
 Any number of @[# preferences]@ are okay, including 0. @[# iteration]@ indicates the number of times the randomized assignments occur. Results tend to converge around 1000 iterations.
 
-Results are printed out in the terminal, which I just pipe to an output file.
+Results are printed out (both by individuals and by events) in the terminal, which I just pipe to an output file. For example running the following command on the sample files:
 
-"code":https://github.com/wyao09/scheduler (file_io.py and scheduler.py)
+@python scheduler.py csv/survey.csv csv/events.csv 3 1000 > csv/sample_output.txt@
+
+Gives us the @sample_out.txt file@ with:
+
+bc.. Articuno ,HBS Tour ,Scavenger Hunt ,Coop ,Sam Adams/Chocolate Factory 
+Charmander ,Microsoft NERD ,Coop ,Sam Adams/Chocolate Factory 
+Dragonite ,Boston Tour ,iLab ,Coop ,Prudential Skywalk 
+Jon ,HBS Tour ,Microsoft NERD ,Coop ,Ice Skating 
+Kim ,Scavenger Hunt ,Microsoft NERD ,Prudential Skywalk 
+Lapras ,Scavenger Hunt ,iLab ,Coop ,Sam Adams/Chocolate Factory 
+Magikarp ,Microsoft NERD ,Coop ,Harvard Tour 
+Mew ,iLab ,Microsoft NERD ,Boston Tour 
+...
+------------------------
+Coop
+Articuno
+Charmander
+Dragonite
+Jon
+Lapras
+Magikarp
+Moltres
+Willie
+
+iLab
+Dragonite
+Lapras
+Mew
+Yusuke
+Zapdos
+
+Ice Skating
+Jon
+Pikachu
+Willie
+...
+
+p. "code":https://github.com/wyao09/scheduler (file_io.py and scheduler.py)
 "more sample csv files":https://github.com/wyao09/scheduler/tree/master/csv
